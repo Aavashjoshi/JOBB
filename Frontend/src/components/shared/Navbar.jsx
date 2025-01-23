@@ -1,23 +1,25 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { Button } from "../ui/button"
 import { LogOut, Store, User2 } from "lucide-react"
-import { useSelector } from "react-redux"
+import { useDispatch,useSelector } from "react-redux"
 import { USER_API_END_POINT } from "@/utils/constant"
 import axios from "axios"
 import { toast } from "sonner"
+import { setUser } from "@/redux/authslice"
 
 
 const Navbar = () => {
   const { user } = useSelector(store => store.auth);
+  const dispatch = useDispatch();
   const logoutHandler = async () => {
     try {
         const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
         if (res.data.success) {
             dispatch(setUser(null));
-            navigate("/");
+            Navigate("/");
             toast.success(res.data.message);
         }
       
