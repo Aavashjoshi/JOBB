@@ -1,11 +1,30 @@
 import express from "express";
-import { login,logout, register, UpdateProfile } from "../controllers/user.controller.js";
+import {
+    login,
+    logout,
+    register,
+    verifyEmailOTP,
+    UpdateProfile
+} from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { singleUpload } from "../middlewares/multer.js";
+
 const router = express.Router();
 
-router.route("/register").post(singleUpload ,register);
+// User registration (with optional file upload)
+router.route("/register").post(singleUpload, register);
+
+// OTP verification
+router.route("/verify-otp").post(verifyEmailOTP);
+
+// User login
 router.route("/login").post(login);
+
+// User logout
 router.route("/logout").get(logout);
+
+// Update profile (requires authentication and file upload)
+
 router.route("/profile/update").post(isAuthenticated,singleUpload,UpdateProfile);
+
 export default router;

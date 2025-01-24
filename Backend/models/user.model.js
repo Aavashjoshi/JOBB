@@ -34,5 +34,16 @@ const userSchema = new mongoose.Schema({
             default: ""
         }
     },
+    isEmailVerified: { 
+        type: Boolean, 
+        default: false // New field to track email verification status
+    },
+    emailOTP: { 
+        type: String // New field to store the OTP 
+    },
+    emailOTPExpiry: { 
+        type: Date // New field to store OTP expiry time
+    },
 }, { timestamps: true });
+
 export const User = mongoose.model('User', userSchema);
