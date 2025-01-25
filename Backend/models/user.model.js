@@ -34,14 +34,14 @@ const userSchema = new mongoose.Schema({
             default: ""
         }
     },
-    isEmailVerified: { 
-        type: Boolean, 
+    isEmailVerified: {
+        type: Boolean,
         default: false // New field to track email verification status
     },
-    emailOTP: { 
+    emailOTP: {
         type: String // New field to store the OTP 
     },
-    emailOTPExpiry: { 
+    emailOTPExpiry: {
         type: Date // New field to store OTP expiry time
     },
 }, { timestamps: true });
