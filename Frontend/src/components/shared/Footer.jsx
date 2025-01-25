@@ -8,9 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
-            <h2 className="text-xl font-bold mb-4">About Job Hunt</h2>
+            <h2 className="text-xl font-bold mb-4">About Career Connect</h2>
             <p className="text-sm">
-              Job Hunt connects talents with top employers, making job hunting simpler and hiring smarter. Your career starts here.
+              Career Connect connects talents with top employers, making job hunting simpler and hiring smarter. Your career starts here.
             </p>
           </div>
 
@@ -30,9 +30,9 @@ const Footer = () => {
           <div>
             <h2 className="text-xl font-bold mb-4">Contact Us</h2>
             <ul className="text-sm space-y-2">
-              <li>Email: <a href="mailto:support@jobhunt.com" className="hover:underline">support@jobhunt.com</a></li>
-              <li>Phone: <a href="tel:+1234567890" className="hover:underline">+1 234 567 890</a></li>
-              <li>Address: 123 Job Hunt Avenue, NY</li>
+              <li>Email: <a href="mailto:support@jobhunt.com" className="hover:underline">a23251928@gmail.com</a></li>
+              <li>Phone: <a href="tel:+9779840076688" className="hover:underline">+977 9840076688</a></li>
+              <li>Address: 123 Career Connecr Avenue, Koteshor</li>
             </ul>
           </div>
         </div>
@@ -56,7 +56,7 @@ const Footer = () => {
           </div>
 
           {/* Copyright */}
-          <p className="text-sm">&copy; 2024 Job Hunt. All rights reserved.</p>
+          <p className="text-sm">&copy; 2024 Career Connect. All rights reserved.</p>
         </div>
       </div>
     </footer>
