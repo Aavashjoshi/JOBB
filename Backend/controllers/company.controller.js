@@ -1,75 +1,54 @@
 import { Company } from "../models/company.model.js";
 
-// Register a new company
 export const registerCompany = async (req, res) => {
     try {
-        const { companyName, location } = req.body;
-
-        // Validate required fields
-        if (!companyName || !location) {
+        const { companyName } = req.body;
+        if (!companyName) {
             return res.status(400).json({
-                message: "Company name and location are required",
+                message: "Company name is required.",
                 success: false
             });
         }
-
-        // Check if the company already exists
         let company = await Company.findOne({ name: companyName });
         if (company) {
             return res.status(400).json({
-                message: "You can't register the same company",
+                message: "You can't register same company.",
                 success: false
-            });
-        }
-
-        // Create a new company
+            })
+        };
         company = await Company.create({
             name: companyName,
-            location,
-            userId: req.userId // Ensure userId is coming from auth middleware
+            userId: req.id
         });
 
         return res.status(201).json({
-            message: "Company registered successfully",
+            message: "Company registered successfully.",
             company,
             success: true
-        });
+        })
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "An error occurred during company registration",
-            success: false
-        });
+        console.log(error);
     }
-};
-
-// Get all companies for the authenticated user
+}
 export const getCompany = async (req, res) => {
     try {
-        const userId = req.userId; // Ensure userId is coming from auth middleware
-
-        // Fetch companies associated with the user
+        const userId = req.id; // logged in user id
         const companies = await Company.find({ userId });
-
-        if (!companies || companies.length === 0) {
+        if (!companies) {
             return res.status(404).json({
-                message: "No companies found",
+                message: "Companies not found.",
                 success: false
-            });
+            })
         }
-
         return res.status(200).json({
             companies,
-            success: true
-        });
+            success:true
+        })
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "An error occurred while fetching companies",
-            success: false
-        });
+        console.log(error);
     }
-};
+}
+
 
 // Get a single company by ID
 export const getCompanyById = async (req, res) => {

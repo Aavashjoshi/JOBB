@@ -7,6 +7,7 @@ import userRoute from "./routes/user.route.js";
 import CompanyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import { sendEmail } from "./utils/email.js"; // Import your email utility
+import applicationRoute from "./routes/application.route.js";
 
 dotenv.config(); // Load environment variables
 
@@ -34,6 +35,7 @@ const PORT = process.env.PORT || 3000;
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", CompanyRoute);
 app.use("/api/v1/job", jobRoute);
+app.use("/api/v1/application", applicationRoute);
 
 // Test Email Route
 app.get("/test-email", async (req, res) => {

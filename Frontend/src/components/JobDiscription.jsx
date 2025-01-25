@@ -5,7 +5,7 @@ import { Button } from './ui/button'
 
 const JobDescription = () => {
      
-    const isApplied = false;
+    const isApplied = true;
 
     return (
         <div className='max-w-7xl mx-auto my-10'>
