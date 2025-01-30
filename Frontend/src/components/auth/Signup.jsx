@@ -18,6 +18,7 @@ const Signup = () => {
     email: "",
     phoneNumber: "",
     password: "",
+    confirmPassword: "",
     role: "",
   });
   const [file, setFile] = useState(null);
@@ -39,8 +40,25 @@ const Signup = () => {
     e.preventDefault();
 
     // Basic client-side validation
-    if (!input.fullname || !input.email || !input.password || !input.role || !file) {
+    if (!input.fullname || !input.email || !input.password || !input.confirmPassword || !input.role || !file) {
       return toast.error("Please fill in all required fields and upload a profile picture.");
+    }
+
+    // Password validation
+    if (input.password.length < 6) {
+      return toast.error("Password must be at least 6 characters long.");
+    }
+
+    if (input.password !== input.confirmPassword) {
+      return toast.error("Password and Confirm Password do not match.");
+    }
+
+    if (/^\s+$/.test(input.password)) {
+      return toast.error("Password cannot contain only spaces.");
+    }
+
+    if (input.password[0] === " ") {
+      return toast.error("Password cannot start with a space.");
     }
 
     try {
@@ -187,6 +205,16 @@ const Signup = () => {
                 placeholder="Password"
               />
             </div>
+            <div className="my-2">
+              <Label>Confirm Password</Label>
+              <Input
+                type="password"
+                value={input.confirmPassword}
+                name="confirmPassword"
+                onChange={changeEventHandler}
+                placeholder="Confirm Password"
+              />
+            </div>
             <div className="flex items-center justify-between">
               <RadioGroup className="flex items-center gap-4 my-5">
                 <div className="flex items-center space-x-2">
@@ -232,8 +260,8 @@ const Signup = () => {
               </Button>
             )}
             <span className="text-sm">
-              Already have an account?{" "}
-              <Link to="/login" className="text-blue-600">
+              Already have an account? {" "}
+              <Link to="/login" className="text-blue-500 underline">
                 Login
               </Link>
             </span>

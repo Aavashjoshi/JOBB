@@ -1,4 +1,6 @@
 import { Company } from "../models/company.model.js";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const registerCompany = async (req, res) => {
     try {
@@ -82,37 +84,29 @@ export const getCompanyById = async (req, res) => {
 export const updateCompany = async (req, res) => {
     try {
         const { name, description, website, location } = req.body;
-
-        // File handling for logo (if using Cloudinary or other services)
-        let logo;
-        if (req.file) {
-            // Replace with actual file upload logic, e.g., Cloudinary
-            logo = `cloudinary_upload_url/${req.file.filename}`;
-        }
-
-        // Prepare data for update
+ 
+        const file = req.file;
+        // idhar cloudinary ayega
+        const fileUri = getDataUri(file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        const logo = cloudResponse.secure_url;
+    
         const updateData = { name, description, website, location, logo };
 
-        // Update the company by ID
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
         if (!company) {
             return res.status(404).json({
-                message: "Company not found",
+                message: "Company not found.",
                 success: false
-            });
+            })
         }
-
         return res.status(200).json({
-            message: "Company updated successfully",
-            company,
-            success: true
-        });
+            message:"Company information updated.",
+            success:true
+        })
+
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "An error occurred while updating the company",
-            success: false
-        });
+        console.log(error);
     }
-};
+}
