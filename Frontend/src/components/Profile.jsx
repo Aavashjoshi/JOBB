@@ -9,13 +9,15 @@ import AppliedJobTable from './AppliedJobTable'
 import { useState } from 'react'
 import UpdateProfileDialog from './UpdateProfileDialog'
 import { useSelector } from 'react-redux'
+import useGetAppliedJobs from '@/hooks/useGetAppliedJobs'
 
 
 //const skills = ["Html", "Css", "Javascript", "Reactjs"]
 const isResume = true;
 function profile() {
+    useGetAppliedJobs();
     const [open, setOpen] = useState(false)
-    const{user} = useSelector(store=>store.auth);
+    const { user } = useSelector(store => store.auth);
     return (
         <div>
             <Navbar />
@@ -30,7 +32,7 @@ function profile() {
                             <p>{user?.profile?.bio}</p>
                         </div>
                     </div>
-                    <Button onClick={() =>setOpen(true)} className="text-right" variant="outline"><Pen /></Button>
+                    <Button onClick={() => setOpen(true)} className="text-right" variant="outline"><Pen /></Button>
                 </div>
                 <div className='my-5'>
                     <div className='flex items-center gap-3 my-2'>
@@ -45,10 +47,10 @@ function profile() {
                 <div className='my-5'>
                     <h1>Skills</h1>
                     <div className='flex items-center gap-1'>
-                    {
+                        {
                             user?.profile?.skills.length !== 0 ? user?.profile?.skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
                         }
-                      
+
                     </div>
                 </div>
                 <div className='grid w-full max-w-sm items-center gap-1.5'>
@@ -61,7 +63,7 @@ function profile() {
                 {/* Applied Job Table   */}
                 <AppliedJobTable />
             </div>
-            <UpdateProfileDialog open={open} setOpen={setOpen}/>
+            <UpdateProfileDialog open={open} setOpen={setOpen} />
         </div>
     )
 }
