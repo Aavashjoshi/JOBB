@@ -5,10 +5,24 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Edit2, MoreHorizontal } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 const CompaniesTable = () => {
-    const { companies } = useSelector(store => store.company);    
+    const { companies, searchCompanyByText } = useSelector(store => store.company);  
+    const [filterCompany, setFilterCompany] = useState(companies);
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
+            if(!searchCompanyByText){
+                return true
+            };
+            return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase());
+
+        });
+        setFilterCompany(filteredCompany);
+    },[companies,searchCompanyByText])
     
     return (
         <div>
@@ -24,7 +38,7 @@ const CompaniesTable = () => {
                 </TableHeader>
                 <TableBody>
                     {
-                        companies?.map((company) => (
+                        filterCompany?.map((company) => (
                             <tr key={company._id}>
                                 <TableCell>
                                     <Avatar>

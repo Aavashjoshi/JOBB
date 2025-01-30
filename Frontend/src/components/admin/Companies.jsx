@@ -5,10 +5,21 @@ import { Button } from '../ui/button'
 import CompaniesTable from './CompaniesTable'
 import { useNavigate } from 'react-router-dom'
 import useGetAllCompanies from '@/hooks/useGetAllCompanies'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setSearchCompanyByText } from '@/redux/companySlice'
 
 const companies = () => {
     useGetAllCompanies();
+    const [input, setInput] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(setSearchCompanyByText(input));
+    },[input]);
+
   return (
     <div>
         <Navbar />
@@ -16,7 +27,8 @@ const companies = () => {
             <div className='flex items-center justify-between my-5'>
                 <Input
                     className="w-fit"
-                    placeholder="Filter by name"                  
+                    placeholder="Filter by name" 
+                    onChange={(e) => setInput(e.target.value)}             
                 />
                 <Button onClick={() => navigate("/admin/companies/create")}>New Company</Button>
             </div>
