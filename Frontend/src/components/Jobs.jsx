@@ -10,22 +10,36 @@ const Jobs = () => {
     const [filterJobs, setFilterJobs] = useState(allJobs);
 
     useEffect(() => {
-        if (searchedQuery) {
-            const lowerCaseQuery = searchedQuery.toLowerCase(); // Ensure case-insensitive search
+        let filteredJobs = allJobs;
 
-            const filteredJobs = allJobs.filter((job) => {
-                return (
-                    job.title.toLowerCase().includes(lowerCaseQuery) ||
-                    job.description.toLowerCase().includes(lowerCaseQuery) ||
-                    job.location.toLowerCase().includes(lowerCaseQuery) ||
-                    String(job.salary).toLowerCase().includes(lowerCaseQuery) // Convert salary to string
+
+        if (searchedQuery) {
+            const searchKeywords = Array.isArray(searchedQuery)
+                ? searchedQuery.map(term => term.toLowerCase())
+                : String(searchedQuery).toLowerCase().split(' ');
+
+            console.log('Search keywords:', searchKeywords);
+
+            filteredJobs = filteredJobs.filter((job) => {
+                // Convert all job fields to lowercase for case-insensitive comparison
+                const jobTitle = job.title.toLowerCase();
+                const jobDescription = job.description.toLowerCase();
+                const jobLocation = job.location.toLowerCase();
+
+
+                // Check if any of the keywords match any of the job fields
+                return searchKeywords.every(keyword =>
+                    jobTitle.includes(keyword) ||
+                    jobDescription.includes(keyword) ||
+                    jobLocation.includes(keyword)
+
                 );
             });
 
-            setFilterJobs(filteredJobs);
-        } else {
-            setFilterJobs(allJobs);
         }
+
+        setFilterJobs(filteredJobs);
+
     }, [allJobs, searchedQuery]);
 
     return (

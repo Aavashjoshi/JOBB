@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail", // You can use other email providers, e.g., "outlook" or "smtp"
   auth: {
-    user: 'a23251928@gmail.com', // Your email address
-    pass:'kqpy cniw jrhh btse' // Your email password or app-specific password
+    user: 'a23251928@gmail.com', // Your email address (stored in .env file for security)
+    pass: 'kqpy cniw jrhh btse' // Your email password or app-specific password (stored in .env file for security)
   },
 });
 
@@ -19,5 +19,11 @@ export const sendEmail = (to, subject, text) => {
   };
 
   // Send email using the transporter
-  return transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions)
+    .then(() => {
+      console.log("Email sent successfully");
+    })
+    .catch((error) => {
+      console.error("Error sending email:", error);
+    });
 };

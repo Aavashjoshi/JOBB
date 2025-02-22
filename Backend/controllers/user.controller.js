@@ -1,9 +1,10 @@
 import { User } from "../models/user.model.js";
+import { sendEmail } from "../utils/email.js"; // Import the email utility
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "../utils/email.js"; // Import the email utility
-import getDataUri from "../utils/datauri.js"; // Utility to handle file data URI
-import cloudinary from "../utils/cloudinary.js"; // Cloudinary configuration
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
+import { Application } from "../models/application.model.js";
 
 // User Registration
 export const register = async (req, res) => {
@@ -275,6 +276,55 @@ export const UpdateProfile = async (req, res) => {
         });
     } catch (error) {
         console.error("Update profile error:", error);
+        return res.status(500).json({
+            message: "Internal server error.",
+            success: false,
+        });
+    }
+};
+
+// Update Applicant Status
+export const updateApplicantStatus = async (req, res) => {
+    try {
+
+        const { id, status } = req.params; // Get the applicant ID and status from params
+
+        // Ensure valid status (success or rejection)
+        if (!["accepted", "rejected"].includes(status)) {
+            return res.status(400).json({
+                message: "Invalid status. It should be either 'accepted' or 'rejected'.",
+                success: false,
+            });
+        }
+        const application = await Application.findOne({ _id: id }).populate('applicant');
+        if (!application) {
+            return res.status(404).json({
+                message: "Application not found.",
+                success: false
+            })
+        };
+
+        // update the status
+        application.status = status.toLowerCase();
+        await application.save();
+
+
+
+
+
+
+        // Send success/rejection email to the applicant
+        const emailSubject = `Your application status is: ${status}`;
+        const emailText = `Dear ${application.applicant.fullname},\n\nWe  inform you that your application has been ${status}.`;
+
+        await sendEmail(application.applicant.email, emailSubject, emailText);
+
+        return res.status(200).json({
+            message: `Applicant status updated to "${status}" and email sent.`,
+            success: true,
+        });
+    } catch (error) {
+        console.error("Error updating applicant status:", error);
         return res.status(500).json({
             message: "Internal server error.",
             success: false,
