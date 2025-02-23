@@ -24,12 +24,35 @@ const Signup = () => {
   const [file, setFile] = useState(null);
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [errors, setErrors] = useState({
+    fullname: "",
+    phoneNumber: "",
+  });
+
   const { loading, user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const changeEventHandler = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+
+    // Real-time validation for fullname and phoneNumber
+    if (name === "fullname") {
+      if (/\d/.test(value)) {
+        setErrors({ ...errors, fullname: "Name should not contain numbers." });
+      } else {
+        setErrors({ ...errors, fullname: "" });
+      }
+    }
+
+    if (name === "phoneNumber") {
+      if (!value.startsWith("9")) {
+        setErrors({ ...errors, phoneNumber: "Phone number should start with 9." });
+      } else {
+        setErrors({ ...errors, phoneNumber: "" });
+      }
+    }
   };
 
   const changeFileHandler = (e) => {
@@ -42,6 +65,16 @@ const Signup = () => {
     // Basic client-side validation
     if (!input.fullname || !input.email || !input.password || !input.confirmPassword || !input.role || !file) {
       return toast.error("Please fill in all required fields and upload a profile picture.");
+    }
+
+    // Fullname validation
+    if (/\d/.test(input.fullname)) {
+      return toast.error("Name should not contain numbers.");
+    }
+
+    // Phone number validation
+    if (!input.phoneNumber.startsWith("9")) {
+      return toast.error("Phone number should start with 9.");
     }
 
     // Password validation
@@ -172,8 +205,9 @@ const Signup = () => {
                 value={input.fullname}
                 name="fullname"
                 onChange={changeEventHandler}
-                placeholder="Full Name "
+                placeholder="Full Name"
               />
+              {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>}
             </div>
             <div className="my-2">
               <Label>Email</Label>
@@ -192,8 +226,9 @@ const Signup = () => {
                 value={input.phoneNumber}
                 name="phoneNumber"
                 onChange={changeEventHandler}
-                placeholder="XXXXXXXX"
+                placeholder="Phone Number"
               />
+              {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
             </div>
             <div className="my-2">
               <Label>Password</Label>
